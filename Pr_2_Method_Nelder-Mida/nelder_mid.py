@@ -34,11 +34,38 @@ def table_output(mass):
 
 
 def count_target_function(x, y):
-    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = (2 * x ** 2) - 2 * x * y + (3 * y ** 2) + x - 3 * y  # 6
-    # target_function = x**2 - x*y + 3*y**2-x
+    # target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
     # target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
+    target_function = x ** 2 - x * y + 3 * y ** 2 - x
+    target_function = round(target_function, 3)
     return target_function
+
+
+def determination_of_min_mean_max(min_mean_max, mass, mass_maximum):
+    print(mass_maximum, 'mass_maximum')
+    massive_for_search = []
+    for i in range(len(mass)):
+        if i not in mass_maximum:
+            massive_for_search.append([mass[i][-1], i])
+    maximum = [-1000000, 123]
+    minimal = [1000000, 123]
+    for i in range(len(massive_for_search)):
+        if massive_for_search[i][0] > maximum[0]:
+            maximum = massive_for_search[i]
+        if massive_for_search[i][0] < minimal[0]:
+            minimal = massive_for_search[i]
+    mean = 0
+    for i in range(len(massive_for_search)):
+        if massive_for_search[i][1] != minimal[1] and massive_for_search[i][1] != maximum[1]:
+            mean = massive_for_search[i]
+    for i in range(len(min_mean_max)):
+        if i == 0:
+            min_mean_max[i] = minimal
+        elif i == 1:
+            min_mean_max[i] = mean
+        elif i == 2:
+            min_mean_max[i] = maximum
+    print(min_mean_max)
 
 
 def maximum_value_function(mass, mass_maximum):
@@ -59,39 +86,121 @@ def center_of_gravity(mass, mass_maximum):
             x_center[1] += mass[i][1]
     for i in range(len(x_center)):
         x_center[i] *= 0.5
+    for i in range(len(x_center)):
+        x_center[i] = round(x_center[i], 3)
     print(f'Центер тяжести = [{round(x_center[0], 3)}, {round(x_center[1], 3)}]')
     print()
     return x_center
 
 
-def finding_coordinates_reflected_vertex(mass, mass_maximum, center_g):
+def finding_coordinates_reflected_vertex(mass, mass_maximum, center_g, min_mean_max):
     new_coordinate = []
     for i in range(n):
-        new_coordinate.append(2 * center_g[i] - mass[mass_maximum[-1]][i])
+        new_coordinate.append(round(2 * center_g[i] - mass[min_mean_max[-1][1]][i], 3))
     print(f'Новые координаты = [{round(new_coordinate[0], 3)}; {round(new_coordinate[1], 3)}]')
     target_func = count_target_function(new_coordinate[0], new_coordinate[1])
-    print('Целевая функция =', round(target_func, 3), '\n')
+    print('Целевая функция =', target_func, '\n')
     new_coordinate.append(target_func)
-    table_output(mass)
     return new_coordinate
 
 
-def increased_or_decreased(mass, mass_maximum, new_coordinate, e, n): # уменьшается функция или увеличивается
-    # print(mass)
-    if new_coordinate[-1] < mass[mass_maximum[-1]][-1]:
+def condition_fulfillment(mass, mass_maximum, min_mean_max, new_coordinate):
+    if min_mean_max[1][0] < new_coordinate[-1] < min_mean_max[-1][0]:
+        print(f'\nТак как выполняется условие:')
+        print(f'x{min_mean_max[1][1]} < x{len(mass) - 1} < x{min_mean_max[-1][1]}')
+        print(f'x{min_mean_max[1][0]} < {new_coordinate[-1]} < {min_mean_max[-1][0]}')
+        mass_maximum.append(len(mass) - 1)
+        return True
+    else:
+        print(f'\nУсловие не выполняется:')
+        print(f'x{min_mean_max[1][1]} <! x{len(mass) - 1} <! x{min_mean_max[-1][1]}')
+        print(f'x{min_mean_max[1][0]} <! x{new_coordinate[-1]} <! x{min_mean_max[-1][0]}')
+        return False
+
+
+def condition_end_search(mass, mass_maximum, n, e):
+    x_center = [0, 0]
+    # print(mass_maximum)
+    for i in range(len(mass)):
+        if i not in mass_maximum:
+            x_center[0] += mass[i][0]
+            x_center[1] += mass[i][1]
+    for i in range(len(x_center)):
+        x_center[i] = round(x_center[i] / 3, 3)
+    x_center.append(count_target_function(x_center[0], x_center[1]))
+    print(f'Центер тяжести = [{x_center[0]}, {x_center[1]}]')
+    print(f'В полученной вершине значение целевой функции = {x_center[-1]}\n')
+    print('Вычислим 𝜎 (сигма)')
+    sigma = 0
+    for i in range(len(mass)):
+        if i not in mass_maximum:
+            sigma += (mass[i][-1] - x_center[-1]) ** 2
+    sigma = sigma / (n + 1)
+    sigma = round(math.sqrt(sigma), 3)
+    if sigma < e:
+        print(f'Сигма = {sigma} < {e}')
+        print('Так как условие окончания поиска выполняется, то процесс итераций завершен.')
+    else:
+        print(f'Сигма = {sigma} >= {e}')
+        print('Так как условие окончания поиска не выполняется, то процесс итерации должен быть продолжен.')
+
+
+def new_polyhedron(mass, mass_maximum, min_mean_max):
+    for k in range(n):
+        new = [0, 0]
+        for l in range(n):
+            new[l] = round(mass[min_mean_max[0][1]][l] + 0.5 *
+                           (mass[mass_maximum[-2 + k]][l] - mass[min_mean_max[0][1]][l]), 3)
+            print(f'{new[l]} = {mass[min_mean_max[-1][1]][l]} + 0.5 * ({mass[mass_maximum[-2 + k]][l]} - '
+                  f'({mass[min_mean_max[-1][1]][l]}))')
+        new.append(count_target_function(new[0], new[1]))
+        print(f'Новые координаты = [{new[0]}; {new[1]}]')
+        print(f'Целевая функция равна: {new[-1]}\n')
+        mass.append(new)
+
+
+def simplex_compressions(mass, mass_maximum, center_g, y):
+    print('\nВыполним операцию сжатия симплекса:')
+    new_coordinate_compressions = [0, 0]
+    for i in range(len(new_coordinate_compressions)):
+        print(f'X{len(mass) - 1}[{i}] = {center_g[i]} + {y} *'
+              f' ({mass[-1][i]} - ({center_g[i]}))')
+
+        new_coordinate_compressions[i] = round(center_g[i] + y * (mass[-1][i] - center_g[i]), 3)
+    target_func = count_target_function(new_coordinate_compressions[0], new_coordinate_compressions[1])
+    new_coordinate_compressions.append(target_func)
+
+    print(f'\nПолучаем точку с координатами: [{new_coordinate_compressions[0]}; {new_coordinate_compressions[1]}]')
+    print(f'В полученной вершине значение целевой функции = {new_coordinate_compressions[-1]}')
+    return new_coordinate_compressions
+
+
+def simplex_stretching(mass, mass_maximum, center_g, B):
+    print('\nВыполним операцию растяжения симплекса:')
+    new_coordinate_stretching = [0, 0]
+    for i in range(n):
+        print(f'x{len(mass)} = {center_g[i]} + {B} *'
+              f' ({mass[-1][i]} - {center_g[i]})')
+        new_coordinate_stretching[i] = round(center_g[i] + B * (mass[-1][i] - center_g[i]), 3)
+    target_func = count_target_function(new_coordinate_stretching[0], new_coordinate_stretching[1])
+    new_coordinate_stretching.append(target_func)
+    print(f'Получаем точку с координатами: [{new_coordinate_stretching[0]}; {new_coordinate_stretching[1]}]')
+    print(f'И функцией = {target_func}')
+    return new_coordinate_stretching
+
+
+def changing_the_function(mass, mass_maximum, new_coordinate, min_mean_max):  # уменьшается функция или увеличивается
+    if new_coordinate[-1] < mass[min_mean_max[-1][1]][-1]:
         print(f'Наблюдается уменьшение целевой функции:')
-        print(f'   x{len(mass) + 1} < x{mass_maximum[-1]}')
+        print(f'x{len(mass)} < x{min_mean_max[-1][1]}')
         print(f'{round(new_coordinate[-1], 3)} < {round(mass[mass_maximum[-1]][-1], 3)}')
         mass.append(new_coordinate)
-        return condition_of_the_end_search(mass, mass_maximum, e, n)
-    elif new_coordinate[-1] > mass[mass_maximum[-1]][-1]:
+        return True
+    elif new_coordinate[-1] > mass[min_mean_max[-1][1]][-1]:
         print(f'Наблюдается увеличение целевой функции:')
-        print(f'   x{len(mass) + 1} < x{mass_maximum[-1]}')
-        print(f'{round(new_coordinate[-1], 3)} > {round(mass[mass_maximum[-1]][-1], 3)}')
-        mass_maximum.append(len(mass) - 1)
-        minimum = find_minimum_value(mass, mass_maximum)
-        generate_new_point(mass, mass_maximum, minimum)
-        return condition_of_the_end_search(mass, mass_maximum, e, n)
+        print(f'x{len(mass)} > x{min_mean_max[-1][1]}')
+        print(f'{round(new_coordinate[-1], 3)} > {round(mass[mass_maximum[-1]][-1], 3)}\n\n')
+        return False
 
 
 def generate_new_point(mass, mass_maximum, minimum):
@@ -102,7 +211,7 @@ def generate_new_point(mass, mass_maximum, minimum):
             new_coordinate[j] = mass[minimum[1]][j] + 0.5 * (mass[k][j] - mass[minimum[1]][j])
         new_coordinate.append(count_target_function(new_coordinate[0], new_coordinate[1]))
         print(f'Новая точка с координатами x1 = {round(new_coordinate[0], 3)}, x2 = {round(new_coordinate[1], 3)}')
-        print(f'И целевой функцией = {round(new_coordinate[-1], 3)}')
+        print(f'В полученной вершине значение целевой функции = {round(new_coordinate[-1], 3)}')
         mass.append(new_coordinate)
         k -= 2
 
@@ -119,50 +228,55 @@ def find_minimum_value(mass, mass_maximum):
     return minimum
 
 
-def condition_of_the_end_search(mass, mass_maximum, e, n): # подсчитывам критерии для остановки
-    center_sim = []
-    for j in range(n):
-        coordinate = 0
+def condition_for_the_end_of_the_search(mass, e, mass_maximum):
+    mass_center_gravity_simplex = []
+    mass_coof = []
+    for j in range(3):
+        minimum = [100000, 0]
         for i in range(len(mass)):
-            if i not in mass_maximum:
-                coordinate += mass[i][j]
-        coordinate = round(coordinate / 3, 3)
-        center_sim.append(coordinate)
-    target = count_target_function(center_sim[0], center_sim[1])
-    print(f'Центор тяжести симплекса: [{round(center_sim[0], 3)}, {round(center_sim[1], 3)}]')
-    print(f'Функция в точке: {round(target, 3)}')
-    print()
-    count_f = 0
-    count_true = 0
-    for i in range(len(mass)):
-        if i not in mass_maximum:
-            print(f'Функция для {i} вершины = {round(mass[i][-1], 3)}')
-            print(f'{round(mass[i][-1] - target, 3)} = {round(mass[i][-1], 3)} - ({round(target, 3)})')
-            funck = round(mass[i][-1] - target, 3)
-            count_f += 1
-            if abs(funck) < e:
-                print('|funck| < e')
-                print(f'{abs(funck)} < {e}')
-                count_true += 1
-            else:
-                print('|funck| > e')
-                print(f'{abs(funck)} > {e}')
-            print()
-    print(f'{count_true} / {count_f} меньше\n')
-    return count_f == count_true
+            if mass[i][-1] < minimum[0] and i not in mass_coof and i not in mass_maximum:
+                minimum = [mass[i][-1], i]
+        mass_coof.append(minimum[1])
+        mass_center_gravity_simplex.append(minimum)
+
+    print(mass_center_gravity_simplex)
+
+    x_center = [0, 0]
+    for i in range(len(mass_center_gravity_simplex)):
+        x_center[0] += mass[mass_center_gravity_simplex[i][1]][0]
+        x_center[1] += mass[mass_center_gravity_simplex[i][1]][1]
+    for i in range(len(x_center)):
+        x_center[i] = round(x_center[i] / 3, 3)
+    x_center.append(count_target_function(x_center[0], x_center[1]))
+    print(f'Центер тяжести = [{x_center[0]}, {x_center[1]}]')
+    print(f'В полученной вершине значение целевой функции = {x_center[-1]}\n')
+
+    sigma = 0
+    for i in range(len(mass_center_gravity_simplex)):
+        sigma += (mass[mass_center_gravity_simplex[i][1]][-1] - x_center[-1]) ** 2
+    sigma = sigma / (n + 1)
+    sigma = round(math.sqrt(sigma), 3)
+    if sigma < e:
+        print(f'Сигма = {sigma} < {e}')
+        print('Так как условие окончания поиска выполняется, то процесс итераций завершен.')
+        return True
+    else:
+        print(f'Сигма = {sigma} >= {e}')
+        print('Так как условие окончания поиска не выполняется, то процесс итерации должен быть продолжен.\n\n')
+        return False
 
 
 if __name__ == '__main__':
+    min_mean_max = [1000000, 0, -1000000]
     mass_maximum = []
     mass = [[0, 0]]
     n = len(mass[0])  # размерость
-    m = 0.75  # длина ребра симплекса
-    B = 1.85 # параметр растяжения
-    y = 0.1 # параметр сжатия
-    e = 0.1 # точность
+    m = 1  # длина ребра симплекса
+    B = 2.8  # параметр растяжения
+    y = 0.4  # параметр сжатия
+    e = 0.1  # точность
 
     calculate_increments(mass, m, n)  # расчёт изначальныйх точек
-    exit(1)
     for i in range(len(mass)):  # расчёт изначальныйх функций для точек
         value_func = count_target_function(mass[i][0], mass[i][1])
         mass[i].append(value_func)
@@ -171,26 +285,82 @@ if __name__ == '__main__':
 
     iteration = 0
     while iteration is not True:
+        # while iteration != 3:
         print('=' * 100)
         print('Итерация =', iteration)
         iteration += 1
         print('=' * 100)
+        determination_of_min_mean_max(min_mean_max, mass, mass_maximum)  # находим минимум максимум и среднее значение
+
         maximum_value_function(mass, mass_maximum)  # отбераем максимальную точку
+
         center_g = center_of_gravity(mass, mass_maximum)  # находим центер
+
         new_coordinate = finding_coordinates_reflected_vertex(mass, mass_maximum,
-                                                              center_g)  # получем новые коодинаты точки
-        if increased_or_decreased(mass, mass_maximum, new_coordinate, e, n):
-            print('-' * 100)
-            print('Так как все условия окончания поиска выполняются, то процесс итерации завершен.')
-            print(
-                f'В качестве приближенного решения x выбирается \nx{len(mass) - 1} = [{round(mass[-1][0], 3)};'
-                f' {round(mass[-1][1], 3)}]\n'
-                f'которой соответствует наименьшее значение целевой функции x{len(mass) - 1} = {round(mass[-1][-1], 3)}')
-            print('-' * 100)
-            iteration = True
+                                                              center_g, min_mean_max)  # получем новые коодинаты точки
+
+        if changing_the_function(mass, mass_maximum, new_coordinate,
+                                 min_mean_max):  # наблюдается ли уменьшение целевой функции?
+            if condition_fulfillment(mass, mass_maximum, min_mean_max, new_coordinate):
+                new_coordinate_compressions = simplex_compressions(mass, mass_maximum, center_g, y)
+                if new_coordinate_compressions[-1] < min_mean_max[-1][0]:
+                    print('\n\nУчитывая, что условие сжатия выполнено,')
+                    print(f'           x{len(mass)} < x{min_mean_max[-1][1]}')
+                    print('то добавим значение в таблицу')
+                    mass.append(new_coordinate_compressions)
+                    table_output(mass)
+                    if condition_for_the_end_of_the_search(mass, e, mass_maximum):
+                        iteration = True
+                else:
+                    for i in range(len(mass) - 1):
+                        if i not in mass_maximum:
+                            mass_maximum.append(i)
+                    print('\n\nУсловие растяжения не выполнено')
+                    print(f'\nСформируем новый многогранник с уменьшенными вдвое сторонами и вершиной x{len(mass) - 1}')
+                    new_polyhedron(mass, mass_maximum, min_mean_max)  # генерация нового многоугольника
+                    if condition_for_the_end_of_the_search(mass, e, mass_maximum):  # условие окончание поиска
+                        iteration = True
+            else:
+                new_coordinate_stretching = simplex_stretching(mass, mass_maximum, center_g, B)
+                if new_coordinate_stretching[-1] < mass[-1][-1]:
+                    print('\n\nУсловие растяжения выполнено')
+                else:
+                    for i in range(len(mass) - 1):
+                        if i not in mass_maximum:
+                            mass_maximum.append(i)
+                    print('\n\nУсловие растяжения не выполнено')
+                    print(f'\nСформируем новый многогранник с уменьшенными вдвое сторонами и вершиной x{len(mass) - 1}')
+                    new_polyhedron(mass, mass_maximum, min_mean_max)  # генерация нового многоугольника
+                    if condition_for_the_end_of_the_search(mass, e, mass_maximum):  # условие окончание поиска
+                        iteration = True
         else:
-            print('-' * 100)
-            print('Так как все условия окончания поиска не выполняются, то процесс итераций должен быть продолжен!')
-            print('-' * 100)
-            print()
+            mass_maximum.append(min_mean_max[1][1])
+            mass_maximum.append(min_mean_max[-1][1])
+            new_polyhedron(mass, mass_maximum, min_mean_max)
+            if condition_for_the_end_of_the_search(mass, e, mass_maximum):  # условие окончание поиска
+                iteration = True
+
+        # if increased_or_decreased(mass, mass_maximum, new_coordinate, e, n):
+        #     mass.append(new_coordinate)
+        #     condition_of_the_end_search(mass, mass_maximum, e, n)
+        # else:
+        #     mass_maximum.append(len(mass) - 1)
+        #     minimum = find_minimum_value(mass, mass_maximum)
+        #     generate_new_point(mass, mass_maximum, minimum)
+        #     condition_of_the_end_search(mass, mass_maximum, e, n)
+        #
+        # if increased_or_decreased(mass, mass_maximum, new_coordinate, e, n):
+        #     print('-' * 100)
+        #     print('Так как все условия окончания поиска выполняются, то процесс итерации завершен.')
+        #     print(
+        #         f'В качестве приближенного решения x выбирается \nx{len(mass) - 1} = [{round(mass[-1][0], 3)};'
+        #         f' {round(mass[-1][1], 3)}]\n'
+        #         f'которой соответствует наименьшее значение целевой функции x{len(mass) - 1} = {round(mass[-1][-1], 3)}')
+        #     print('-' * 100)
+        #     iteration = True
+        # else:
+        #     print('-' * 100)
+        #     print('Так как все условия окончания поиска не выполняются, то процесс итераций должен быть продолжен!')
+        #     print('-' * 100)
+        #     print()
     table_output(mass)

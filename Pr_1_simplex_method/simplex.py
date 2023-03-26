@@ -76,7 +76,7 @@ def finding_coordinates_reflected_vertex(mass, mass_maximum, center_g):
     return new_coordinate
 
 
-def increased_or_decreased(mass, mass_maximum, new_coordinate, e, n): # уменьшается функция или увеличивается
+def increased_or_decreased(mass, mass_maximum, new_coordinate, e, n):  # уменьшается функция или увеличивается
     # print(mass)
     if new_coordinate[-1] < mass[mass_maximum[-1]][-1]:
         print(f'Наблюдается уменьшение целевой функции:')
@@ -90,16 +90,16 @@ def increased_or_decreased(mass, mass_maximum, new_coordinate, e, n): # умен
         print(f'{round(new_coordinate[-1], 3)} > {round(mass[mass_maximum[-1]][-1], 3)}')
         mass_maximum.append(len(mass) - 1)
         minimum = find_minimum_value(mass, mass_maximum)
-        generate_new_point(mass, mass_maximum, minimum)
+        generate_new_point(mass, mass_maximum, minimum, m)
         return condition_of_the_end_search(mass, mass_maximum, e, n)
 
 
-def generate_new_point(mass, mass_maximum, minimum):
+def generate_new_point(mass, mass_maximum, minimum, m):
     k = -1
     while k != -5:
         new_coordinate = [0] * n
         for j in range(n):
-            new_coordinate[j] = mass[minimum[1]][j] + 0.5 * (mass[k][j] - mass[minimum[1]][j])
+            new_coordinate[j] = mass[minimum[1]][j] + m * (mass[k][j] - mass[minimum[1]][j])
         new_coordinate.append(count_target_function(new_coordinate[0], new_coordinate[1]))
         print(f'Новая точка с координатами x1 = {round(new_coordinate[0], 3)}, x2 = {round(new_coordinate[1], 3)}')
         print(f'И целевой функцией = {round(new_coordinate[-1], 3)}')
@@ -119,7 +119,7 @@ def find_minimum_value(mass, mass_maximum):
     return minimum
 
 
-def condition_of_the_end_search(mass, mass_maximum, e, n): # подсчитывам критерии для остановки
+def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитывам критерии для остановки
     center_sim = []
     for j in range(n):
         coordinate = 0
