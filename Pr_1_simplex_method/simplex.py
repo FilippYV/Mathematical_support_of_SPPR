@@ -3,11 +3,11 @@ import math
 
 def calculate_increments(mass, m, n):
     print(mass, m, n)
-    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 5)
+    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 7)
     print(f'd1 = ({(math.sqrt(n + 1) - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d1 =', d1, '\n')
 
-    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 5)
+    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 7)
     print(f'd2 = ({(math.sqrt(n + 1) + n - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d2 =', d2, '\n')
 
@@ -27,8 +27,8 @@ def table_output(mass):
     for i in range(len(mass)):
         print(f'Вершина №{i}: ', end='')
         for j in range(len(mass[i]) - 1):
-            print(f'{round(mass[i][j], 3)} | ', end='')
-        print(f'{round(mass[i][-1], 3)}', end='')
+            print(f'{round(mass[i][j], 7)} | ', end='')
+        print(f'{round(mass[i][-1], 7)}', end='')
         print()
     print()
 
@@ -38,7 +38,7 @@ def count_target_function(x, y):
     # target_function = (2 * x ** 2) - 2 * x * y + (3 * y ** 2) + x - 3 * y  # 6
     # target_function = x**2 - x*y + 3*y**2-x
     target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
-    return round(target_function, 5)
+    return round(target_function, 7)
 
 
 def maximum_value_function(mass, mass_maximum):
@@ -46,7 +46,7 @@ def maximum_value_function(mass, mass_maximum):
     for i in range(len(mass)):
         if mass[i][-1] > maximum[0] and i not in mass_maximum:
             maximum = [mass[i][-1], i]
-    print(f'Максимум функции = {round(maximum[0], 3)}, номер вершины = {maximum[1]}')
+    print(f'Максимум функции = {round(maximum[0], 7)}, номер вершины = {maximum[1]}')
     print()
     mass_maximum.append(maximum[1])
 
@@ -59,7 +59,7 @@ def center_of_gravity(mass, mass_maximum):
             x_center[1] += mass[i][1]
     for i in range(len(x_center)):
         x_center[i] *= 0.5
-    print(f'Центер тяжести = [{round(x_center[0], 3)}, {round(x_center[1], 3)}]')
+    print(f'Центер тяжести = [{round(x_center[0], 7)}, {round(x_center[1], 7)}]')
     print()
     return x_center
 
@@ -68,9 +68,9 @@ def finding_coordinates_reflected_vertex(mass, mass_maximum, center_g):
     new_coordinate = []
     for i in range(n):
         new_coordinate.append(2 * center_g[i] - mass[mass_maximum[-1]][i])
-    print(f'Новые координаты = [{round(new_coordinate[0], 5)}; {round(new_coordinate[1], 5)}]')
+    print(f'Новые координаты = [{round(new_coordinate[0], 7)}; {round(new_coordinate[1], 7)}]')
     target_func = count_target_function(new_coordinate[0], new_coordinate[1])
-    print('Целевая функция =', round(target_func, 3), '\n')
+    print('Целевая функция =', round(target_func, 7), '\n')
     new_coordinate.append(target_func)
     table_output(mass)
     return new_coordinate
@@ -81,13 +81,13 @@ def increased_or_decreased(mass, mass_maximum, new_coordinate, e, n):  # уме�
     if new_coordinate[-1] < mass[mass_maximum[-1]][-1]:
         print(f'Наблюдается уменьшение целевой функции:')
         print(f'   x{len(mass) + 1} < x{mass_maximum[-1]}')
-        print(f'{round(new_coordinate[-1], 3)} < {round(mass[mass_maximum[-1]][-1], 3)}')
+        print(f'{round(new_coordinate[-1], 7)} < {round(mass[mass_maximum[-1]][-1], 7)}')
         mass.append(new_coordinate)
         return condition_of_the_end_search(mass, mass_maximum, e, n)
     elif new_coordinate[-1] > mass[mass_maximum[-1]][-1]:
         print(f'Наблюдается увеличение целевой функции:')
         print(f'   x{len(mass) + 1} < x{mass_maximum[-1]}')
-        print(f'{round(new_coordinate[-1], 3)} > {round(mass[mass_maximum[-1]][-1], 3)}')
+        print(f'{round(new_coordinate[-1], 7)} > {round(mass[mass_maximum[-1]][-1], 7)}')
         mass_maximum.append(len(mass) - 1)
         minimum = find_minimum_value(mass, mass_maximum)
         generate_new_point(mass, mass_maximum, minimum, m)
@@ -101,8 +101,8 @@ def generate_new_point(mass, mass_maximum, minimum, m):
         for j in range(n):
             new_coordinate[j] = mass[minimum[1]][j] + m * (mass[k][j] - mass[minimum[1]][j])
         new_coordinate.append(count_target_function(new_coordinate[0], new_coordinate[1]))
-        print(f'Новая точка с координатами x1 = {round(new_coordinate[0], 3)}, x2 = {round(new_coordinate[1], 3)}')
-        print(f'И целевой функцией = {round(new_coordinate[-1], 3)}')
+        print(f'Новая точка с координатами x1 = {round(new_coordinate[0], 7)}, x2 = {round(new_coordinate[1], 7)}')
+        print(f'И целевой функцией = {round(new_coordinate[-1], 7)}')
         mass.append(new_coordinate)
         k -= 2
 
@@ -112,7 +112,7 @@ def find_minimum_value(mass, mass_maximum):
     for i in range(len(mass)):
         if mass[i][-1] < minimum[0] and i not in mass_maximum:
             minimum = [mass[i][-1], i]
-    print(f'Берём минимальную функцию = {round(minimum[0], 3)}, номер вершины = {minimum[1]}\n')
+    print(f'Берём минимальную функцию = {round(minimum[0], 7)}, номер вершины = {minimum[1]}\n')
     for i in range(len(mass)):
         if i != minimum[-1] and i not in mass_maximum:
             mass_maximum.append(i)
@@ -126,19 +126,19 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
         for i in range(len(mass)):
             if i not in mass_maximum:
                 coordinate += mass[i][j]
-        coordinate = round(coordinate / 3, 5)
+        coordinate = round(coordinate / 3, 7)
         center_sim.append(coordinate)
     target = count_target_function(center_sim[0], center_sim[1])
-    print(f'Центор тяжести симплекса: [{round(center_sim[0], 3)}, {round(center_sim[1], 3)}]')
-    print(f'Функция в точке: {round(target, 3)}')
+    print(f'Центор тяжести симплекса: [{round(center_sim[0], 3)}, {round(center_sim[1], 7)}]')
+    print(f'Функция в точке: {round(target, 7)}')
     print()
     count_f = 0
     count_true = 0
     for i in range(len(mass)):
         if i not in mass_maximum:
-            print(f'Функция для {i} вершины = {round(mass[i][-1], 3)}')
-            print(f'{round(mass[i][-1] - target, 3)} = {round(mass[i][-1], 3)} - ({round(target, 3)})')
-            funck = round(mass[i][-1] - target, 5)
+            print(f'Функция для {i} вершины = {round(mass[i][-1], 7)}')
+            print(f'{round(mass[i][-1] - target, 7)} = {round(mass[i][-1], 3)} - ({round(target, 7)})')
+            funck = round(mass[i][-1] - target, 7)
             count_f += 1
             if abs(funck) < e:
                 print('|funck| < e')
@@ -181,9 +181,9 @@ if __name__ == '__main__':
             print('-' * 100)
             print('Так как все условия окончания поиска выполняются, то процесс итерации завершен.')
             print(
-                f'В качестве приближенного решения x выбирается \nx{len(mass) - 1} = [{round(mass[-1][0], 3)};'
-                f' {round(mass[-1][1], 3)}]\n'
-                f'которой соответствует наименьшее значение целевой функции x{len(mass) - 1} = {round(mass[-1][-1], 3)}')
+                f'В качестве приближенного решения x выбирается \nx{len(mass) - 1} = [{round(mass[-1][0], 7)};'
+                f' {round(mass[-1][1], 7)}]\n'
+                f'которой соответствует наименьшее значение целевой функции x{len(mass) - 1} = {round(mass[-1][-1], 7)}')
             print('-' * 100)
             iteration = True
         else:
