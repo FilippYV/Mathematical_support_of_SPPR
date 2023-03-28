@@ -3,11 +3,11 @@ import math
 
 def calculate_increments(mass, m, n):
     print(mass, m, n)
-    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 3)
+    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 5)
     print(f'd1 = ({(math.sqrt(n + 1) - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d1 =', d1, '\n')
 
-    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 3)
+    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 5)
     print(f'd2 = ({(math.sqrt(n + 1) + n - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d2 =', d2, '\n')
 
@@ -37,8 +37,8 @@ def count_target_function(x, y):
     target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
     # target_function = (2 * x ** 2) - 2 * x * y + (3 * y ** 2) + x - 3 * y  # 6
     # target_function = x**2 - x*y + 3*y**2-x
-    # target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
-    return target_function
+    target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
+    return round(target_function, 5)
 
 
 def maximum_value_function(mass, mass_maximum):
@@ -68,7 +68,7 @@ def finding_coordinates_reflected_vertex(mass, mass_maximum, center_g):
     new_coordinate = []
     for i in range(n):
         new_coordinate.append(2 * center_g[i] - mass[mass_maximum[-1]][i])
-    print(f'Новые координаты = [{round(new_coordinate[0], 3)}; {round(new_coordinate[1], 3)}]')
+    print(f'Новые координаты = [{round(new_coordinate[0], 5)}; {round(new_coordinate[1], 5)}]')
     target_func = count_target_function(new_coordinate[0], new_coordinate[1])
     print('Целевая функция =', round(target_func, 3), '\n')
     new_coordinate.append(target_func)
@@ -126,7 +126,7 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
         for i in range(len(mass)):
             if i not in mass_maximum:
                 coordinate += mass[i][j]
-        coordinate = round(coordinate / 3, 3)
+        coordinate = round(coordinate / 3, 5)
         center_sim.append(coordinate)
     target = count_target_function(center_sim[0], center_sim[1])
     print(f'Центор тяжести симплекса: [{round(center_sim[0], 3)}, {round(center_sim[1], 3)}]')
@@ -138,7 +138,7 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
         if i not in mass_maximum:
             print(f'Функция для {i} вершины = {round(mass[i][-1], 3)}')
             print(f'{round(mass[i][-1] - target, 3)} = {round(mass[i][-1], 3)} - ({round(target, 3)})')
-            funck = round(mass[i][-1] - target, 3)
+            funck = round(mass[i][-1] - target, 5)
             count_f += 1
             if abs(funck) < e:
                 print('|funck| < e')
@@ -154,10 +154,10 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
 
 if __name__ == '__main__':
     mass_maximum = []
-    mass = [[7, 8]]
+    mass = [[9, 9]]
     n = len(mass[0])  # размерость
     m = 0.25  # длина ребра симплекса
-    e = 0.001  # точность
+    e = 0.00001  # точность
 
     calculate_increments(mass, m, n)  # расчёт изначальныйх точек
 
