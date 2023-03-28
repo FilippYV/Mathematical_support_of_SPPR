@@ -154,7 +154,7 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
 
 if __name__ == '__main__':
     mass_maximum = []
-    mass = [[4, 76]]
+    mass = [[7, 8]]
     n = len(mass[0])  # размерость
     m = 0.25  # длина ребра симплекса
     e = 0.001  # точность
