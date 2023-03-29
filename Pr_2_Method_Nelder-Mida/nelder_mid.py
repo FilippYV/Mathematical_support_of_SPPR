@@ -3,11 +3,11 @@ import math
 
 def calculate_increments(mass, m, n):
     print(mass, m, n)
-    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 5)
+    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 7)
     print(f'd1 = ({(math.sqrt(n + 1) - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d1 =', d1, '\n')
 
-    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 5)
+    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 7)
     print(f'd2 = ({(math.sqrt(n + 1) + n - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d2 =', d2, '\n')
 
@@ -27,17 +27,17 @@ def table_output(mass):
     for i in range(len(mass)):
         print(f'Вершина №{i}: ', end='')
         for j in range(len(mass[i]) - 1):
-            print(f'{round(mass[i][j], 5)} | ', end='')
-        print(f'{round(mass[i][-1], 5)}', end='')
+            print(f'{round(mass[i][j], 7)} | ', end='')
+        print(f'{round(mass[i][-1], 7)}', end='')
         print()
     print()
 
 
 def count_target_function(x, y):
-    # target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
+    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
     # target_function = x ** 2 - x * y + 3 * y ** 2 - x
-    target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
-    target_function = round(target_function, 5)
+    # target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
+    target_function = round(target_function, 7)
     return target_function
 
 
@@ -88,7 +88,7 @@ def center_of_gravity(mass, mass_maximum):
         x_center[i] *= 0.5
     for i in range(len(x_center)):
         x_center[i] = round(x_center[i], 7)
-    print(f'Центер тяжести = [{round(x_center[0], 5)}, {round(x_center[1], 7)}]')
+    print(f'Центер тяжести = [{round(x_center[0], 7)}, {round(x_center[1], 7)}]')
     print()
     return x_center
 
@@ -223,9 +223,9 @@ if __name__ == '__main__':
     mass_maximum = []
     mass = [[9, 9]]
     n = len(mass[0])  # размерость
-    m = 0.25  # длина ребра симплекса
-    B = 2.8  # параметр растяжения
-    y = 0.4  # параметр сжатия
+    m = 0.07 # длина ребра симплекса
+    B = 1.2  # параметр растяжения
+    y = 0.1  # параметр сжатия
     e = 0.00001  # точность
 
     calculate_increments(mass, m, n)  # расчёт изначальныйх точек
