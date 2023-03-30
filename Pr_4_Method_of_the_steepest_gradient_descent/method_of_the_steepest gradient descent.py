@@ -157,7 +157,7 @@ if __name__ == '__main__':
     mass = [[9, 9]]
     n = len(mass[0])  # размерость
     mass_grad = []
-    e = 0.1  # точность
+    e = 0.0001  # точность
     iteration = 0
 
     print(f'Вычислим значение целевой функции f(x{len(mass) - 1})\n')
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     print(f'Вычислим градиент ∇f(x{len(mass) - 1})')
     mass_grad.append(count_grad_target_function(mass[-1][0], mass[-1][1]))
     print(f'Градиент функции ∇f(x{len(mass) - 1}): [{mass_grad[-1][0]}; {mass_grad[-1][1]}]\n')
-    while iteration != False:
+    while iteration != -404:
         print('=' * 100)
         print('Итерация =', iteration)
         print('=' * 100)
@@ -174,4 +174,6 @@ if __name__ == '__main__':
         print(f'Найдем новую координату x[{len(mass)}]\n')
         new_coordinate = generate_new_coordinate(mass, mass_grad[-1])
         iteration = condition_end_search(mass)
+        if iteration == False:
+            iteration = -404
     table_output(mass)
