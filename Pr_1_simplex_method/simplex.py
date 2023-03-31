@@ -34,9 +34,7 @@ def table_output(mass):
 
 
 def count_target_function(x, y):
-    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = x**2 - x*y + 3*y**2-x
-    # target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
+    target_function = eval(function)
     return round(target_function, 7)
 
 
@@ -157,6 +155,10 @@ if __name__ == '__main__':
     n = len(mass[0])  # размерость
     m = 0.07  # длина ребра симплекса
     e = 0.00001  # точность
+
+    function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
+    # function = "(2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y"
+    # function = "x ** 2 - x * y + 3 * y ** 2 - x"
 
     calculate_increments(mass, m, n)  # расчёт изначальныйх точек
 

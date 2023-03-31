@@ -7,16 +7,12 @@ def round_value(value):
 
 
 def count_target_function(x, y):
-    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = x**2 - x*y + 3*y**2-x
-    # target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
-    # target_function = 2 * x ** 2 + x * y + y ** 2
+    target_function = eval(function)
     return round_value(target_function)
 
 
 def transform_for_h():
-    # target_function = '2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y'
-    target_function = '10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y'  # 7
+    target_function = eval(function)
     target_function = target_function.replace("x", "h")
     target_function = target_function.replace("y", "h")
     print(target_function)
@@ -25,9 +21,7 @@ def transform_for_h():
 def calculating_the_derivative_for():
     result_diff = []
     x, y = symbols('x y')
-    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = (2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y
-    # target_function = 2 * x ** 2 + x * y + y ** 2
+    target_function = eval(function)
     result_diff.append(str(target_function.diff(x)))
     result_diff.append(str(target_function.diff(y)))
     return result_diff
@@ -44,6 +38,7 @@ def count_grad_target_function(value_x, value_y):
         print(f'Производная для {index} переменной = {relust}')
         massive_derivative_calculating.append(relust)
     return massive_derivative_calculating
+
 
 
 def derivative_for_h():
@@ -160,6 +155,10 @@ if __name__ == '__main__':
     e = 0.0001  # точность
     iteration = 0
 
+    function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
+    # function = "(2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y"
+    # function = "x ** 2 - x * y + 3 * y ** 2 - x"
+
     print(f'Вычислим значение целевой функции f(x{len(mass) - 1})\n')
     mass[-1].append(count_target_function(mass[-1][0], mass[-1][1]))
     print(f'Значение целевой функции f(x{len(mass) - 1}) = {mass[-1][2]}\n')
@@ -174,6 +173,6 @@ if __name__ == '__main__':
         print(f'Найдем новую координату x[{len(mass)}]\n')
         new_coordinate = generate_new_coordinate(mass, mass_grad[-1])
         iteration = condition_end_search(mass)
-        if iteration == False:
+        if iteration is False:
             iteration = -404
     table_output(mass)

@@ -7,19 +7,14 @@ def round_value(value):
 
 
 def count_target_function(x, y):
-    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = x**2 - x*y + 3*y**2-x
-    # target_function = 2.8 * y ** 2 + 1.9 * x + 2.7 * x ** 2 + 1.6 - 1.9 * y
-    # target_function = x ** 2 - x * y + 3 * y ** 2 - x
+    target_function = eval(function)
     return round_value(target_function)
 
 
-def calculating_the_derivative_for():
+def calculating_the_derivative():
     result_diff = []
     x, y = symbols('x y')
-    target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = (2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y
-    # target_function = x ** 2 - x * y + 3 * y ** 2 - x
+    target_function = eval(function)
     result_diff.append(str(target_function.diff(x)))
     result_diff.append(str(target_function.diff(y)))
     return result_diff
@@ -27,7 +22,7 @@ def calculating_the_derivative_for():
 
 def count_grad_target_function(value_x, value_y):
     massive_derivative_calculating = []
-    derivative = calculating_the_derivative_for()
+    derivative = calculating_the_derivative()
     for index in range(2):
         y = value_y
         x = value_x
@@ -110,6 +105,10 @@ if __name__ == '__main__':
     e = 0.0001  # точность
     grad = 0
     mass_grad = []
+
+    function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
+    # function = "(2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y"
+    # function = "x ** 2 - x * y + 3 * y ** 2 - x"
 
     iteration = 0
 
