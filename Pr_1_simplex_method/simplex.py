@@ -3,11 +3,11 @@ import math
 
 def calculate_increments(mass, m, n):
     print(mass, m, n)
-    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 7)
+    d1 = round(((math.sqrt(n + 1) - 1) / (n * math.sqrt(2))) * m, 9)
     print(f'd1 = ({(math.sqrt(n + 1) - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d1 =', d1, '\n')
 
-    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 7)
+    d2 = round(((math.sqrt(n + 1) + n - 1) / (n * math.sqrt(2))) * m, 9)
     print(f'd2 = ({(math.sqrt(n + 1) + n - 1)} / {(n * math.sqrt(2))}) * {m}')
     print('d2 =', d2, '\n')
 
@@ -35,7 +35,7 @@ def table_output(mass):
 
 def count_target_function(x, y):
     target_function = eval(function)
-    return round(target_function, 7)
+    return round(target_function, 9)
 
 
 def maximum_value_function(mass, mass_maximum):
@@ -69,7 +69,7 @@ def finding_coordinates_reflected_vertex(mass, mass_maximum, center_g):
     target_func = count_target_function(new_coordinate[0], new_coordinate[1])
     print('Целевая функция =', round(target_func, 7), '\n')
     new_coordinate.append(target_func)
-    table_output(mass)
+    # table_output(mass)
     return new_coordinate
 
 
@@ -123,7 +123,7 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
         for i in range(len(mass)):
             if i not in mass_maximum:
                 coordinate += mass[i][j]
-        coordinate = round(coordinate / 3, 7)
+        coordinate = round(coordinate / 3, 9)
         center_sim.append(coordinate)
     target = count_target_function(center_sim[0], center_sim[1])
     print(f'Центор тяжести симплекса: [{round(center_sim[0], 3)}, {round(center_sim[1], 7)}]')
@@ -135,7 +135,7 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
         if i not in mass_maximum:
             print(f'Функция для {i} вершины = {round(mass[i][-1], 7)}')
             print(f'{round(mass[i][-1] - target, 7)} = {round(mass[i][-1], 3)} - ({round(target, 7)})')
-            funck = round(mass[i][-1] - target, 7)
+            funck = round(mass[i][-1] - target, 9)
             count_f += 1
             if abs(funck) < e:
                 print('|funck| < e')
@@ -149,12 +149,62 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
     return count_f == count_true
 
 
+def out_graph(data):
+    import matplotlib.pyplot as plt
+    from colorspacious import cspace_converter
+    import matplotlib.cm as cmx
+    from matplotlib import cm
+    # from mpl_toolkits.mplot3d import Axes3D
+    import numpy as np
+
+    fig = plt.figure(figsize=(16, 9))
+    ax = fig.add_subplot(projection='3d')
+    # x = np.arange(-2 * np.pi, 2 * np.pi, 0.2)
+    # y = np.arange(-2 * np.pi, 2 * np.pi, 0.2)
+    # xgrid, ygrid = np.meshgrid(x, y)
+    # zgrid = np.sin(xgrid) * np.sin(ygrid) / (xgrid * ygrid)
+    # ax.plot_wireframe(xgrid, ygrid, zgrid)
+
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-50, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col_1 = ax.scatter(mass_x, mass_y, value_func,  cmap="jet", c=colors)
+    ax.set_xlabel('Значения первой переменной х(1)')
+    ax.set_ylabel('Значения второй переменной х(2)')
+    ax.set_zlabel('Значения целевой функции f(x)')
+    plt.colorbar(col_1)
+    plt.savefig("static/plt_1.png")
+
+    fig2 = plt.figure(figsize=(16, 9))
+    ax_2 = fig2.add_subplot()
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-10, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col = ax_2.scatter(mass_x, mass_y, cmap="jet", c=colors)
+    ax_2.set_xlabel('Значения первой переменной х(1)')
+    ax_2.set_ylabel('Значения второй переменной х(2)')
+    # ax_2.set_zlabel('Значения целевой функции f(x)')
+    plt.colorbar(col)
+    ax_2.grid()
+    plt.savefig("static/plt_2.png")
+
+
 if __name__ == '__main__':
     mass_maximum = []
     mass = [[9, 9]]
     n = len(mass[0])  # размерость
-    m = 0.07  # длина ребра симплекса
-    e = 0.00001  # точность
+    m = 0.07 # длина ребра симплекса
+    e = 0.0000001  # точность
 
     function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
     # function = "(2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y"
@@ -170,6 +220,7 @@ if __name__ == '__main__':
 
     iteration = 0
     while iteration is not True:
+    # while iteration <= 2:
         print('=' * 100)
         print('Итерация =', iteration)
         iteration += 1
@@ -193,3 +244,4 @@ if __name__ == '__main__':
             print('-' * 100)
             print()
     table_output(mass)
+    out_graph(mass)
