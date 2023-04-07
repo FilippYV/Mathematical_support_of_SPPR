@@ -151,19 +151,10 @@ def condition_of_the_end_search(mass, mass_maximum, e, n):  # подсчитыв
 
 def out_graph(data):
     import matplotlib.pyplot as plt
-    from colorspacious import cspace_converter
-    import matplotlib.cm as cmx
-    from matplotlib import cm
-    # from mpl_toolkits.mplot3d import Axes3D
     import numpy as np
 
     fig = plt.figure(figsize=(16, 9))
     ax = fig.add_subplot(projection='3d')
-    # x = np.arange(-2 * np.pi, 2 * np.pi, 0.2)
-    # y = np.arange(-2 * np.pi, 2 * np.pi, 0.2)
-    # xgrid, ygrid = np.meshgrid(x, y)
-    # zgrid = np.sin(xgrid) * np.sin(ygrid) / (xgrid * ygrid)
-    # ax.plot_wireframe(xgrid, ygrid, zgrid)
 
     mass_x = []
     mass_y = []
@@ -193,7 +184,6 @@ def out_graph(data):
     col = ax_2.scatter(mass_x, mass_y, cmap="jet", c=colors)
     ax_2.set_xlabel('Значения первой переменной х(1)')
     ax_2.set_ylabel('Значения второй переменной х(2)')
-    # ax_2.set_zlabel('Значения целевой функции f(x)')
     plt.colorbar(col)
     ax_2.grid()
     plt.savefig("static/plt_2.png")
