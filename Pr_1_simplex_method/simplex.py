@@ -164,7 +164,7 @@ def out_graph(data):
         mass_y.append(data[i][1])
         value_func.append(data[i][-1])
     colors = np.arange(len(mass_x))
-    col_1 = ax.scatter(mass_x, mass_y, value_func,  cmap="jet", c=colors)
+    col_1 = ax.scatter(mass_x, mass_y, value_func, cmap="jet", c=colors)
     ax.set_xlabel('Значения первой переменной х(1)')
     ax.set_ylabel('Значения второй переменной х(2)')
     ax.set_zlabel('Значения целевой функции f(x)')
@@ -193,8 +193,8 @@ if __name__ == '__main__':
     mass_maximum = []
     mass = [[9, 9]]
     n = len(mass[0])  # размерость
-    m = 0.07 # длина ребра симплекса
-    e = 0.0000001  # точность
+    m = 0.07  # длина ребра симплекса
+    e = 0.001  # точность
 
     function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
     # function = "(2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y"

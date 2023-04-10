@@ -40,7 +40,7 @@ def count_target_function(x, y):
 
 
 def determination_of_min_mean_max(min_mean_max, mass, mass_maximum):
-    print(mass_maximum, 'mass_maximum')
+    # print(mass_maximum, 'mass_maximum')
     massive_for_search = []
     for i in range(len(mass)):
         if i not in mass_maximum:
@@ -64,6 +64,7 @@ def determination_of_min_mean_max(min_mean_max, mass, mass_maximum):
         elif i == 2:
             min_mean_max[i] = maximum
     print(min_mean_max)
+    # exit(123)
 
 
 def maximum_value_function(mass, mass_maximum):
@@ -106,7 +107,7 @@ def condition_fulfillment(mass, mass_maximum, min_mean_max, new_coordinate):
     if min_mean_max[1][0] < new_coordinate[-1] < min_mean_max[-1][0]:
         print(f'\nТак как выполняется условие:')
         print(f'x{min_mean_max[1][1]} < x{len(mass) - 1} < x{min_mean_max[-1][1]}')
-        print(f'x{min_mean_max[1][0]} < {new_coordinate[-1]} < {min_mean_max[-1][0]}')
+        print(f'{min_mean_max[1][0]} < {new_coordinate[-1]} < {min_mean_max[-1][0]}')
         mass_maximum.append(len(mass) - 1)
         return True
     else:
@@ -114,8 +115,6 @@ def condition_fulfillment(mass, mass_maximum, min_mean_max, new_coordinate):
         print(f'x{min_mean_max[1][1]} <! x{len(mass) - 1} <! x{min_mean_max[-1][1]}')
         print(f'x{min_mean_max[1][0]} <! x{new_coordinate[-1]} <! x{min_mean_max[-1][0]}')
         return False
-
-
 
 
 def new_polyhedron(mass, mass_maximum, min_mean_max):
@@ -176,8 +175,6 @@ def changing_the_function(mass, mass_maximum, new_coordinate, min_mean_max):  # 
         return False
 
 
-
-
 def condition_for_the_end_of_the_search(mass, e, mass_maximum):
     mass_center_gravity_simplex = []
     mass_coof = []
@@ -198,7 +195,7 @@ def condition_for_the_end_of_the_search(mass, e, mass_maximum):
     for i in range(len(x_center)):
         x_center[i] = round(x_center[i] / 3, 9)
     x_center.append(count_target_function(x_center[0], x_center[1]))
-    print(f'Центер тяжести = [{x_center[0]}, {x_center[1]}]')
+    print(f'\nПроверим условие окончания поиска\nЦентер тяжести = [{x_center[0]}, {x_center[1]}]')
     print(f'В полученной вершине значение целевой функции = {x_center[-1]}\n')
 
     sigma = 0
@@ -215,15 +212,54 @@ def condition_for_the_end_of_the_search(mass, e, mass_maximum):
         print('Так как условие окончания поиска не выполняется, то процесс итерации должен быть продолжен.\n\n')
         return False
 
+def out_graph(data):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig = plt.figure(figsize=(16, 9))
+    ax = fig.add_subplot(projection='3d')
+
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-50, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col_1 = ax.scatter(mass_x, mass_y, value_func, cmap="jet", c=colors)
+    ax.set_xlabel('Значения первой переменной х(1)')
+    ax.set_ylabel('Значения второй переменной х(2)')
+    ax.set_zlabel('Значения целевой функции f(x)')
+    plt.colorbar(col_1)
+    plt.savefig("static/plt_1.png")
+
+    fig2 = plt.figure(figsize=(16, 9))
+    ax_2 = fig2.add_subplot()
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-10, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col = ax_2.scatter(mass_x, mass_y, cmap="jet", c=colors)
+    ax_2.set_xlabel('Значения первой переменной х(1)')
+    ax_2.set_ylabel('Значения второй переменной х(2)')
+    plt.colorbar(col)
+    ax_2.grid()
+    plt.savefig("static/plt_2.png")
+
 
 if __name__ == '__main__':
     min_mean_max = [1000000, 0, -1000000]
     mass_maximum = []
     mass = [[9, 9]]
     n = len(mass[0])  # размерость
-    m = 0.03  # длина ребра симплекса
+    m = 0.07  # длина ребра симплекса
     B = 2.8  # параметр растяжения
-    y = 0.2  # параметр сжатия
+    y = 0.4  # параметр сжатия
     e = 0.001  # точность
 
     function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
@@ -238,8 +274,8 @@ if __name__ == '__main__':
     table_output(mass)  # вывод таблицы
 
     iteration = 0
-    while iteration is not True:
-        # while iteration != 3:
+    # while iteration is not True:
+    while iteration != 3:
         print('=' * 100)
         print('Итерация =', iteration)
         iteration += 1
@@ -278,6 +314,14 @@ if __name__ == '__main__':
                 new_coordinate_stretching = simplex_stretching(mass, mass_maximum, center_g, B)
                 if new_coordinate_stretching[-1] < mass[-1][-1]:
                     print('\n\nУсловие растяжения выполнено')
+                    # maximums = [-1000000, 0]
+                    # for i, strs in enumerate(mass):
+                    #     if i not in mass_maximum and strs[-1] > maximums[0]:
+                    #         maximums = [strs[-1], i]
+                    # mass_maximum.append(maximums[1])
+                    # determination_of_min_mean_max(min_mean_max, mass, mass_maximum)
+
+
                 else:
                     for i in range(len(mass) - 1):
                         if i not in mass_maximum:
@@ -293,5 +337,8 @@ if __name__ == '__main__':
             new_polyhedron(mass, mass_maximum, min_mean_max)
             if condition_for_the_end_of_the_search(mass, e, mass_maximum):  # условие окончание поиска
                 iteration = True
+        if condition_for_the_end_of_the_search(mass, e, mass_maximum):  # условие окончание поиска
+            iteration = True
 
     table_output(mass)
+    # out_graph(mass)
