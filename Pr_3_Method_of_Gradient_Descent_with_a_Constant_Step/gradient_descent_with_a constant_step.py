@@ -100,9 +100,25 @@ def out_graph(data):
     import matplotlib.pyplot as plt
     import numpy as np
 
+    fig0 = plt.figure(figsize=(16, 9))
+    ax0 = fig0.add_subplot(projection='3d')
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-(len(mass)), 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col_1 = ax0.scatter(mass_x, mass_y, value_func, cmap="jet", c=colors)
+    ax0.set_xlabel('Значения первой переменной х(1)')
+    ax0.set_ylabel('Значения второй переменной х(2)')
+    ax0.set_zlabel('Значения целевой функции f(x)')
+    plt.colorbar(col_1)
+    plt.savefig("static/plt_0.png")
+
     fig = plt.figure(figsize=(16, 9))
     ax = fig.add_subplot(projection='3d')
-
     mass_x = []
     mass_y = []
     value_func = []
