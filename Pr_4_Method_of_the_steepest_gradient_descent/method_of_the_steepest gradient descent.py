@@ -152,7 +152,7 @@ if __name__ == '__main__':
     mass = [[9, 9]]
     n = len(mass[0])  # размерость
     mass_grad = []
-    e = 0.0001  # точность
+    e = 0.001  # точность
     iteration = 0
 
     function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
