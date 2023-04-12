@@ -96,6 +96,45 @@ def table_output(mass):
         print()
     print()
 
+def out_graph(data):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig = plt.figure(figsize=(16, 9))
+    ax = fig.add_subplot(projection='3d')
+
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-50, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col_1 = ax.scatter(mass_x, mass_y, value_func, cmap="jet", c=colors)
+    ax.set_xlabel('Значения первой переменной х(1)')
+    ax.set_ylabel('Значения второй переменной х(2)')
+    ax.set_zlabel('Значения целевой функции f(x)')
+    plt.colorbar(col_1)
+    plt.savefig("static/plt_1.png")
+
+    fig2 = plt.figure(figsize=(16, 9))
+    ax_2 = fig2.add_subplot()
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-10, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col = ax_2.scatter(mass_x, mass_y, cmap="jet", c=colors)
+    ax_2.set_xlabel('Значения первой переменной х(1)')
+    ax_2.set_ylabel('Значения второй переменной х(2)')
+    plt.colorbar(col)
+    ax_2.grid()
+    plt.savefig("static/plt_2.png")
+
 
 if __name__ == '__main__':
     mass = [[9, 9]]
@@ -131,3 +170,4 @@ if __name__ == '__main__':
         if changing_the_function(mass, new_coordinate, grad, h, iteration) is True:
             iteration = -404
     table_output(mass)
+    out_graph(mass)
