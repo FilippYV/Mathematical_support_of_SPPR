@@ -42,11 +42,8 @@ def count_grad_target_function(value_x, value_y):
 
 
 def derivative_for_h():
-    result_diff = []
     x, y = symbols('x y')
     target_function = 10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y  # 7
-    # target_function = (2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y
-    # target_function = 2 * x ** 2 + x * y + y ** 2
     target_function = str(target_function)
     return target_function
 
@@ -73,7 +70,6 @@ def calculating_the_derivative_for_h(func):
 
 
 def count_h(value_x, value_y):
-    massive_derivative_calculating = []
     derivative = derivative_for_h()
     print(derivative)
     print(value_x)

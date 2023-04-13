@@ -274,8 +274,8 @@ if __name__ == '__main__':
     table_output(mass)  # вывод таблицы
 
     iteration = 0
-    # while iteration is not True:
-    while iteration != 3:
+    while iteration is not True:
+    # while iteration != 3:
         print('=' * 100)
         print('Итерация =', iteration)
         iteration += 1
@@ -314,14 +314,6 @@ if __name__ == '__main__':
                 new_coordinate_stretching = simplex_stretching(mass, mass_maximum, center_g, B)
                 if new_coordinate_stretching[-1] < mass[-1][-1]:
                     print('\n\nУсловие растяжения выполнено')
-                    # maximums = [-1000000, 0]
-                    # for i, strs in enumerate(mass):
-                    #     if i not in mass_maximum and strs[-1] > maximums[0]:
-                    #         maximums = [strs[-1], i]
-                    # mass_maximum.append(maximums[1])
-                    # determination_of_min_mean_max(min_mean_max, mass, mass_maximum)
-
-
                 else:
                     for i in range(len(mass) - 1):
                         if i not in mass_maximum:
@@ -341,4 +333,4 @@ if __name__ == '__main__':
             iteration = True
 
     table_output(mass)
-    # out_graph(mass)
+    out_graph(mass)

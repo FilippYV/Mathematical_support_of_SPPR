@@ -132,13 +132,51 @@ def find_norm_gradient_vector(mass, grad, e):
 
 
 def calculate_step(mass):
-    pass
+    exit(123)
+
+
+def out_graph(data):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig = plt.figure(figsize=(16, 9))
+    ax = fig.add_subplot(projection='3d')
+
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-len(data), 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col_1 = ax.scatter(mass_x, mass_y, value_func, cmap="jet", c=colors)
+    ax.set_xlabel('Значения первой переменной х(1)')
+    ax.set_ylabel('Значения второй переменной х(2)')
+    ax.set_zlabel('Значения целевой функции f(x)')
+    plt.colorbar(col_1)
+    plt.savefig("static/plt_1.png")
+
+    fig2 = plt.figure(figsize=(16, 9))
+    ax_2 = fig2.add_subplot()
+    mass_x = []
+    mass_y = []
+    value_func = []
+    for i in range(-2, 0):
+        mass_x.append(data[i][0])
+        mass_y.append(data[i][1])
+        value_func.append(data[i][-1])
+    colors = np.arange(len(mass_x))
+    col = ax_2.scatter(mass_x, mass_y, cmap="jet", c=colors)
+    ax_2.set_xlabel('Значения первой переменной х(1)')
+    ax_2.set_ylabel('Значения второй переменной х(2)')
+    plt.colorbar(col)
+    ax_2.grid()
+    plt.savefig("static/plt_2.png")
 
 
 if __name__ == '__main__':
-    # mass = [[-0.25, 0.5]]
     mass = [[9, 9]]
-    # mass = [[0, 0]]
     n = len(mass[0])  # размерость
     mass_grad = []
     mass_p = []  # направление спуска
@@ -146,8 +184,6 @@ if __name__ == '__main__':
     iteration = 0
 
     function = "10 * x ** 2 + 3 * x * y + y ** 2 + 10 * y"  # 7
-    # function = "(2.8 * y ** 2) + 1.9 * x + (2.7 * x ** 2) + 1.6 - 1.9 * y"
-    # function = "x ** 2 - x * y + 3 * y ** 2 - x"
 
     print(f'Вычислим значение целевой функции f(x{len(mass) - 1})')
     mass[-1].append(count_target_function(mass[-1][0], mass[-1][1]))
@@ -175,3 +211,4 @@ if __name__ == '__main__':
         else:
             calculate_step(mass)
     table_output(mass)
+    out_graph(mass)
